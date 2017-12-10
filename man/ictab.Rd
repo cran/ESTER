@@ -2,29 +2,54 @@
 % Please edit documentation in R/ictab.R
 \name{ictab}
 \alias{ictab}
-\title{Computes Akaike weights for a set of models}
+\title{Computes Akaike weights or pseudo-BMA weights for a set of models}
 \usage{
-ictab(ic, ...)
+ictab(mods, ic, ...)
 }
 \arguments{
-\item{ic}{Indicates which information criterion to use.}
+\item{mods}{Should be a named list of models, of class \code{lm}, \code{merMod} or
+\code{brmsfit}.}
 
-\item{...}{A set of models of class \code{lm} or \code{merMod}.}
+\item{ic}{Indicates which information criterion to use. Current supported
+information criteria include \code{aic} and \code{bic} for \code{lm} and
+\code{merMod} models, as well as \code{WAIC} and \code{LOO} for
+\code{brmsfit} models.}
+
+\item{...}{Additional parameters to be passed to \code{brms::WAIC} or
+\code{brms::LOO} functions.}
+}
+\value{
+An object of class \code{data.frame}, which contains the value of the
+information criterion (either AIC, BIC, WAIC or LOOIC), the number of parameters
+(k for AIC and BIC or p for WAIC or LOOIC), the delta_IC (for AIC and BIC) or the
+elpd for models compared with WAIC or LOOIC, and the weight of each
+model (Akaike weights for AIC or BIC and pseudo-BMA weights for WAIC or LOOIC).
 }
 \description{
-Returns a table with Akaike weights of a set of models, based on various
+Returns a table with weights of a set of models, based on various
 information criteria. Currently, \code{ictab} supports the computation of
 Akaike weights from the \code{aic} or the \code{bic} computed on \code{lm}
-or \code{merMod} models.
+or \code{merMod} models, as well as the computation of pseudo-BMA weights,
+computed from the WAIC or LOOIC of \code{brmsfit} models.
 }
 \examples{
+library(ESTER)
 data(mtcars)
 mod1 <- lm(mpg ~ cyl, mtcars)
 mod2 <- lm(mpg ~ cyl + vs, mtcars)
 mod3 <- lm(mpg ~ cyl + vs + I(vs^2), mtcars)
 mod4 <- lm(mpg ~ cyl * vs, mtcars)
-ictab(aic, mod1, mod2, mod3, mod4)
-ictab(bic, mod1, mod2, mod3, mod4)
+mods <- list(mod1 = mod1, mod2 = mod2, mod3 = mod3, mod4 = mod4)
+ictab(mods, aic)
+ictab(mods, bic)
+
+\dontrun{
+library(brms)
+mod1 <- brm(mpg ~ cyl, mtcars)
+mod2 <- brm(mpg ~ cyl + vs, mtcars)
+mods <- list(m1 = mod1, m2 = mod2)
+ictab(mods, LOO, reloo = TRUE, k_threshold = 0.6, cores = 2)
+}
 
 }
 \references{
@@ -35,6 +60,9 @@ and Multimodel Inference: A Practical Information-Theoretical Approach.
 Burnham, K. P., \& Anderson, D. R. (2004). Multimodel
 inference: Understanding AIC and BIC in model selection. Sociological
 Methods and Research, 33(2), 261-304.
+
+Yao, Y. P., Vehtari, A., Simpson, D., \& Gelman, A. (2017).
+Using stacking to average Bayesian predictive distributions.
 }
 \seealso{
 \code{\link{aic}}, \code{\link{bic}}

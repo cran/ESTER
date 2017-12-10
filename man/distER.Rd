@@ -2,27 +2,27 @@
 % Please edit documentation in R/distER.R
 \name{distER}
 \alias{distER}
-\title{Simulates many sequential evidence ratios to obtain their distribution}
+\title{Simulating many sequential testing with evidence ratios and plotting their distribution}
 \usage{
-distER(cohensd, nmin, n, nsims, ic = bic)
+distER(cohensd, nmin, nmax, nsims, ic = bic)
 }
 \arguments{
 \item{cohensd}{Expected effect size}
 
 \item{nmin}{Minimum sample size from which start computing ERs}
 
-\item{n}{Total sample size}
+\item{nmax}{Maximum sample size at which stop computing ERs}
 
 \item{nsims}{Number of experiments to simulate.}
 
-\item{ic}{Indicates whether to use the aic or the bic.}
+\item{ic}{Indicates whether to use the aic or the bic}
 }
 \description{
-Simulates many sequential evidence ratios using \code{simER}, keeps the last
-of each simulation, and plots their distribution.
+Simulating many sequential evidence ratios using \code{simER}, keeps the last
+of each simulation, and plotting their distribution.
 }
 \examples{
-\dontrun{distER(cohensd = 0.6, nmin = 20, n = 100, nsims = 100, ic = bic)}
+\dontrun{distER(cohensd = 0.6, nmin = 20, nmax = 100, nsims = 100, ic = bic)}
 
 }
 \seealso{

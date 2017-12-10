@@ -2,33 +2,49 @@
 % Please edit documentation in R/simER.R
 \name{simER}
 \alias{simER}
-\title{Simulates a sequential testing with evidence ratios for independent two-groups comparisons}
+\title{Simulates sequential testing with evidence ratios}
 \usage{
-simER(cohensd, nmin, n, ic = bic, plot = TRUE)
+simER(cohensd = 0, nmin = 20, nmax = 100, boundary = 10, nsims = 20,
+  ic = bic, cores = 2, verbose = FALSE)
 }
 \arguments{
 \item{cohensd}{Expected effect size}
 
 \item{nmin}{Minimum sample size from which start computing ERs}
 
-\item{n}{Total sample size}
+\item{nmax}{Maximum sample size at which stop computing ERs}
 
-\item{ic}{Indicates whether to use the aic or the bic.}
+\item{boundary}{The Evidence Ratio (or its reciprocal) at which
+the run is stopped as well}
 
-\item{plot}{If TRUE, produces a plot of the evolution of the ERs}
+\item{nsims}{Number of simulated samples (should be dividable by cores)}
+
+\item{ic}{Indicates whether to use the aic or the bic}
+
+\item{cores}{Number of parallel processes. If cores is set to 1, no parallel framework is used
+(default is two cores).}
+
+\item{verbose}{Show output about progress}
+}
+\value{
+An object of class \code{data.frame}, which contains...
 }
 \description{
-Simulates a sequential testing with evidence ratios for independent two-groups
-comparisons, as a function of sample size and standardized mean difference
-(Cohen's d).
+Simulates one or many sequential testing with evidence ratios from independent two-groups
+comparisons, as a function of sample size and standardized mean difference.
+Evidence ratios are computed from the so-called Akaike weights from
+either the Akaike Information Criterion or the Bayesian Information Criterion.
 }
 \examples{
-simER(cohensd = 0.6, nmin = 20, n = 200, ic = aic, plot = TRUE)
-simER(cohensd = 0, nmin = 20, n = 200, ic = bic, plot = TRUE)
+\dontrun{
+sim <- simER(cohensd = 0.8, nmin = 20, nmax = 100, boundary = 10,
+nsims = 100, ic = bic, cores = 2, verbose = TRUE)
+plot(sim, log = TRUE, hist = TRUE)
+}
 
 }
 \seealso{
-\code{\link{distER}}
+\code{\link{ictab}}, \code{\link{analysER}}
 }
 \author{
 Ladislas Nalborczyk <\email{ladislas.nalborczyk@gmail.com}>
